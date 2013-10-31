@@ -13,10 +13,12 @@ module.exports = ->
           join: true # first concat all files into one, then compile that file to .js
           separator: '\n\n'
         files:
-          'js/main.js': [
+          'js/Blink.js': [
             'src/Animation.coffee'
             'src/Easing.coffee'
             'src/Pixel.coffee'
+          ]
+          'js/main.js': [
             'src/Main.coffee'
           ]
 

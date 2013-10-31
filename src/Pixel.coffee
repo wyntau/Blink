@@ -1,6 +1,6 @@
 DURATION = 500
 RADIUS = 5
-class Pixel
+window.Pixel = class Pixel
     constructor: (option)->
 
         @setPosition option.x, option.y

@@ -1,4 +1,4 @@
-EASEING_METHOD =
+window.EASEING_METHOD =
     Quadratic:
         In: (k)->
             k * k
