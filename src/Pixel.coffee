@@ -31,8 +31,7 @@ class Pixel
         @
 
     setLife: (delay, duration)->
-        delay = delay || 0
-        @start = +new Date() + delay
+        @start = +new Date() + (delay || 0)
         @duration = duration || DURATION
         @
 

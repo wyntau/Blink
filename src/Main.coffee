@@ -1,6 +1,8 @@
-PIXEL_NUM = 2000
+PIXEL_NUM = 3000
 
-WIDTH = HEIGHT = 500
+WIDTH = window.innerWidth
+
+HEIGHT = window.innerHeight
 
 DEFAUTL_BACKGROUND = '#000'
 
@@ -13,24 +15,41 @@ MAX_RADIUS = 5
 canvas = document.getElementById 'canvas'
 ctx = canvas.getContext '2d'
 
+ctx.canvas.width = window.innerWidth
+ctx.canvas.height = window.innerHeight
+
 arr = []
 
-for i in [0...PIXEL_NUM]
-    arr.push(
-        new Pixel({
-            x: Math.random() * WIDTH,
-            y: Math.random() * HEIGHT,
-            R: Math.random() * MAX_RADIUS + 1,
-            delay: Math.random * MAX_DELAY,
-            duration: Math.random() * MAX_DURATION + 50
-        })
-    )
+stats = new Stats()
+stats.domElement.style.position = 'absolute'
+stats.domElement.style.right = '50px'
+stats.domElement.style.top = '50px'
+stats.domElement.style.width = '90px'
+document.body.appendChild( stats.domElement )
+
+addPixel = (num)->
+    for i in [0...num]
+        arr.push(
+            new Pixel({
+                x: Math.random() * WIDTH,
+                y: Math.random() * HEIGHT,
+                R: Math.random() * MAX_RADIUS + 1,
+                delay: Math.random * MAX_DELAY + 50,
+                duration: Math.random() * MAX_DURATION + 50
+            })
+        )
+
+addPixel(PIXEL_NUM)
+
 step = ->
+    stats.begin()
     states = []
+    drop = 0
 
     for pixel, i in arr[0..]
         if (state = pixel.update()) is null
             arr.splice i, 1
+            drop++
         else if(state)
             states.push state
 
@@ -45,6 +64,8 @@ step = ->
         ctx.fill()
 
     states = []
+    addPixel drop
+    stats.end()
 
 verify = ->
     arr.length
