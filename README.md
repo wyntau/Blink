@@ -1,4 +1,4 @@
 
     npm install
     grunt
-    open index.html
+    open demo/index.html
