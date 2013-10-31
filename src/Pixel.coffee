@@ -50,12 +50,12 @@ window.Pixel = class Pixel
         now = +new Date()
         spend = now - @start
 
-        if spend > 2 * @duration # has animation end
-            return null
-        else if spend <= @duration # is blinking
+        if spend <= @duration # is blinking
             @R = @fromR + @toR * @easingMethod(spend / @duration)
         else if @duration <= spend <= 2 * @duration # is disappearing
             @R = @fromR + @toR * @easingMethod( (2 * @duration - spend) / @duration)
+        else if spend > 2 * @duration # has animation end
+            return null
         else
             console.log 'notmatch'
 
