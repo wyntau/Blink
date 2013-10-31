@@ -1,0 +1,25 @@
+{
+  "name": "blink",
+  "version": "0.0.1",
+  "description": "ERROR: No README data found!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jeremial",
+  "license": "MIT",
+  "devDependencies": {
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt": "~0.4.1"
+  },
+  "dependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-watch": "~0.5.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://gitlab.amapjs.com/wentao.liu/blink.git"
+  }
+}
