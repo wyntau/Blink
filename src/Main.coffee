@@ -15,8 +15,8 @@ MAX_RADIUS = 10
 canvas = document.getElementById 'canvas'
 ctx = canvas.getContext '2d'
 
-ctx.canvas.width = window.innerWidth
-ctx.canvas.height = window.innerHeight
+ctx.canvas.width = WIDTH
+ctx.canvas.height = HEIGHT
 
 img = new Image()
 img.src = 'img/particle.png'
