@@ -1,4 +1,4 @@
-PIXEL_NUM = 3000
+PIXEL_NUM = 5000
 
 WIDTH = window.innerWidth
 
@@ -10,7 +10,7 @@ MAX_DELAY = 5000
 
 MAX_DURATION = 5000
 
-MAX_RADIUS = 12
+MAX_RADIUS = 10
 
 canvas = document.getElementById 'canvas'
 ctx = canvas.getContext '2d'
@@ -25,8 +25,8 @@ arr = []
 
 stats = new Stats()
 stats.domElement.style.position = 'absolute'
-stats.domElement.style.right = '50px'
-stats.domElement.style.top = '50px'
+stats.domElement.style.right = '30px'
+stats.domElement.style.top = '30px'
 stats.domElement.style.width = '90px'
 document.body.appendChild( stats.domElement )
 
