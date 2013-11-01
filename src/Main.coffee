@@ -10,13 +10,16 @@ MAX_DELAY = 5000
 
 MAX_DURATION = 5000
 
-MAX_RADIUS = 5
+MAX_RADIUS = 12
 
 canvas = document.getElementById 'canvas'
 ctx = canvas.getContext '2d'
 
 ctx.canvas.width = window.innerWidth
 ctx.canvas.height = window.innerHeight
+
+img = new Image()
+img.src = 'img/particle.png'
 
 arr = []
 
@@ -57,11 +60,13 @@ step = ->
     ctx.fillRect 0, 0, canvas.width, canvas.height
 
     for state in states
-        {r,g,b,R,x,y} = state
-        ctx.fillStyle = "rgb(#{r},#{g},#{b})"
-        ctx.beginPath()
-        ctx.arc(x, y, R, 0, Math.PI * 2)
-        ctx.fill()
+        {r,g,b,a,R,x,y} = state
+        # ctx.globalAlpha = a
+        ctx.drawImage img, x - R, y - R, 2 * R, 2 * R
+        # ctx.fillStyle = "rgba(#{r},#{g},#{b},#{a})"
+        # ctx.beginPath()
+        # ctx.arc(x, y, R, 0, Math.PI * 2)
+        # ctx.fill()
 
     states = []
     addPixel drop

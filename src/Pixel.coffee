@@ -51,9 +51,9 @@ window.Pixel = class Pixel
         spend = now - @start
 
         if spend <= @duration # is blinking
-            @R = @fromR + @toR * @easingMethod(spend / @duration)
+            @R = @fromR + (@toR - @fromR) * @easingMethod(spend / @duration)
         else if @duration <= spend <= 2 * @duration # is disappearing
-            @R = @fromR + @toR * @easingMethod( (2 * @duration - spend) / @duration)
+            @R = @fromR + (@toR - @fromR) * @easingMethod( (2 * @duration - spend) / @duration)
         else if spend > 2 * @duration # has animation end
             return null
         else
