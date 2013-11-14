@@ -25,16 +25,16 @@ document.body.appendChild( stats.domElement )
 addPixel = (pixels)->
     for key, pixel of pixels
         arr.push(
-            new Pixel({
-                x: pixel[0],
-                y: pixel[1],
-                R: pixel[2],
-                delay: pixel[3],
+            new Pixel
+                x: pixel[0]
+                y: pixel[1]
+                R: pixel[2]
+                delay: pixel[3]
                 duration: 3000
-                })
         )
 
 socket = io.connect 'http://localhost:3000'
+
 socket.emit 'first connect',
     width:WIDTH
     height: HEIGHT
