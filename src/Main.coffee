@@ -37,8 +37,8 @@ addPixel = (num)->
                 x: Math.random() * WIDTH,
                 y: Math.random() * HEIGHT,
                 R: Math.random() * MAX_RADIUS + 1,
-                delay: Math.random * MAX_DELAY + 50,
-                duration: Math.random() * MAX_DURATION + 50
+                delay: i, # Math.random * MAX_DELAY + 50,
+                duration: 3000 # Math.random() * MAX_DURATION + 50
             })
         )
 
@@ -73,7 +73,7 @@ step = ->
         # ctx.fill()
 
     states = []
-    socket.emit 'refresh', drop
+    # socket.emit 'refresh', drop
     stats.end()
 
 verify = ->

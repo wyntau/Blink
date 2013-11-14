@@ -5,6 +5,10 @@ ioEvent = (socket)->
         socket.on eventName, (data)->
             handler socket, data
 
+    setInterval ->
+        socket.emit 'refresh', 2000
+    , 3000
+
 events =
     connection: (socket)->
         socket.emit 'init', 5000
