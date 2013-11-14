@@ -1,19 +1,35 @@
-ioEvent = (socket)->
-    events['connection'] socket
+WIDTH = 0
+HEIGHT = 0
+MAX_DELAY = 5000
 
-    for eventName, handler of events when eventName isnt 'connection'
+MAX_DURATION = 5000
+
+MAX_RADIUS = 10
+
+ioEvent = (socket)->
+
+    for eventName, handler of events
         socket.on eventName, (data)->
             handler socket, data
 
-    setInterval ->
-        socket.emit 'refresh', 2000
-    , 3000
-
 events =
-    connection: (socket)->
-        socket.emit 'init', 5000
+    'first connect': (socket, data)->
+        WIDTH = data.width || 800
+        HEIGHT = data.height || 600
 
-    refresh: (socket, num)->
-        socket.emit 'refresh', num
+        socket.emit 'init', makePixel(5000)
+
+        setInterval ->
+            socket.emit 'refresh', makePixel(2000)
+        , 3000
+
+makePixel = (num)->
+    for i in [0...num]
+        [
+            parseInt Math.random() * WIDTH
+            parseInt Math.random() * HEIGHT
+            parseInt Math.random() * MAX_RADIUS + 1
+            i
+        ]
 
 module.exports = ioEvent

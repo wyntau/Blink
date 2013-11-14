@@ -1,16 +1,8 @@
-PIXEL_NUM = 5000
-
 WIDTH = window.innerWidth
 
 HEIGHT = window.innerHeight
 
 DEFAUTL_BACKGROUND = '#000'
-
-MAX_DELAY = 5000
-
-MAX_DURATION = 5000
-
-MAX_RADIUS = 10
 
 canvas = document.getElementById 'canvas'
 ctx = canvas.getContext '2d'
@@ -30,24 +22,30 @@ stats.domElement.style.top = '30px'
 stats.domElement.style.width = '90px'
 document.body.appendChild( stats.domElement )
 
-addPixel = (num)->
-    for i in [0...num]
+addPixel = (pixels)->
+    for key, pixel of pixels
         arr.push(
             new Pixel({
-                x: Math.random() * WIDTH,
-                y: Math.random() * HEIGHT,
-                R: Math.random() * MAX_RADIUS + 1,
-                delay: i, # Math.random * MAX_DELAY + 50,
-                duration: 3000 # Math.random() * MAX_DURATION + 50
-            })
+                x: pixel[0],
+                y: pixel[1],
+                R: pixel[2],
+                delay: pixel[3],
+                duration: 3000
+                })
         )
 
 socket = io.connect 'http://localhost:3000'
-socket.on 'init', (num)->
-    addPixel num
+socket.emit 'first connect',
+    width:WIDTH
+    height: HEIGHT
+
+socket.on 'init', (pixels)->
+    addPixel pixels
     Animation.start step, verify, complete
-socket.on 'refresh', (num)->
-    addPixel num
+
+socket.on 'refresh', (pixels)->
+    addPixel pixels
+
 step = ->
     stats.begin()
     states = []
@@ -73,7 +71,6 @@ step = ->
         # ctx.fill()
 
     states = []
-    # socket.emit 'refresh', drop
     stats.end()
 
 verify = ->
