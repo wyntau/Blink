@@ -8,7 +8,6 @@ var express = require('express');
 var http    = require('http');
 var path    = require('path');
 var socket  = require('socket.io');
-var ioEvent = require('./lib/ioEvent');
 
 var app = express();
 
