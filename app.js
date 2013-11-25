@@ -29,7 +29,7 @@ var io = socket.listen(server);
 server.listen(app.get('port'));
 
 var arr = [];
-for(var i = 0; i< 5000; i++){
+for(var i = 0; i< 8000; i++){
     arr.push([
         73 + 62e5 * Math.random() / 100000, // lng
         3 + 50e5 * Math.random() / 100000, // lat

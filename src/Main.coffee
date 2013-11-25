@@ -1,7 +1,7 @@
 class Map
     constructor:()->
         @mapObj = new AMap.Map 'amap', {
-            level: 6
+            level: 5
         }
 
         canvasObj = new AMap.Canvas()
@@ -31,7 +31,7 @@ class Map
                 for dot, i in data.update
                     self.arr[i].addLife dot
 
-            AMap.event.addListener self.mapObj, 'dragend', =>
+            AMap.event.addListener self.mapObj, 'dragging', =>
                 for dot in self.arr
                     dot.updatePos self.mapObj
 
