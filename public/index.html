@@ -8,19 +8,19 @@
             margin: 0;
             padding: 0;
         }
-        #canvas{
+        #amap{
             display:block;
             border: 1px solid #ccc;
             margin: 0 auto;
+            width:1200px;
+            height: 800px;
         }
     </style>
 </head>
 <body>
-    <div>
-        <canvas id="canvas"></canvas>
-    </div>
+    <div id="amap"></div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="lib/stats.min.js"></script>
+    <script src="http://webapi.amap.com/maps?v=1.2&key=develop_example"></script>
     <script src="dist/Blink.js"></script>
     <script src="dist/main.js"></script>
 </body>

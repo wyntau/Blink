@@ -1,123 +1,70 @@
 class Pixel
-    @RADIUS = 5
-    @DURATION = 500
-    constructor: (option)->
+    @MIN_RADIUS   = 0
+    @MAX_RADIUS   = 10
+    @MAX_DURATION = 2000
+    @MIN_SCORE    = 0
+    @MAX_SCORE    = 8000
+    constructor: (mapObj, opts)->
 
-        @setPosition option.x, option.y
+        @_lnglat = new AMap.LngLat(opts.lng, opts.lat)
 
-        @setRadius option.R
+        @p = mapObj.lnglatTocontainer @_lnglat
 
-        @setColor option.r, option.g, option.b
+        @_score = Math.max(Pixel.MIN_SCORE, Math.min(opts.score, Pixel.MAX_SCORE))
 
-        @setLife option.delay, option.duration
+        @_fromR = Pixel.MIN_RADIUS
 
-        @setEaseingMethod option.easeing
+        @_toR = @_score / Pixel.MAX_SCORE * Pixel.MAX_RADIUS
 
-    setPosition: (x, y)->
-        @x = x || 0
-        @y = y || 0
-        @
+        @R = @_fromR
 
-    setRadius: (toR)->
-        @fromR = 0
-        @toR = toR || Pixel.RADIUS
-        @R = @fromR
-        @
+        @_duration = @_score / Pixel.MAX_SCORE * Pixel.MAX_DURATION
 
-    setColor: (r, g, b)->
-        @r = Math.floor(r || Math.random() * 255)
-        @g = Math.floor(g || Math.random() * 255)
-        @b = Math.floor(b || Math.random() * 255)
-        @
+        @_start = +new Date() + Math.random() * Pixel.MAX_DURATION * 2
 
-    setLife: (delay, duration)->
-        @start = +new Date() + (delay || 0)
-        @duration = duration || Pixel.DURATION
-        @
+    reInit: ->
+        if not @_next or @_next.length <= 0
+            return false;
+        else
+            newScore = @_score + @_next.pop()
+            @_score = Math.max(Pixel.MIN_SCORE, Math.min(newScore, Pixel.MAX_SCORE))
+            @_toR = @_score / Pixel.MAX_SCORE * Pixel.MAX_RADIUS
+            @R = @_fromR
+            @_duration = @_score / Pixel.MAX_SCORE * Pixel.MAX_DURATION
+            @_start = +new Date() + Math.random() * Pixel.MAX_DURATION * 2
 
-    setEaseingMethod: (easingMethod)->
-        if not easingMethod
-            @easingMethod = (x)->
-                x
-            return
-
-        [section, mode] = easingMethod.split('.')
-        @easingMethod = Easing[section]?[mode] || (x)->
-            x
-        @
+    addLife: (newScore)->
+        if not @_next
+            @_next = [newScore]
+        else
+            @_next.push newScore
 
     update: ->
-        now = +new Date()
-        spend = now - @start
+        if @complete
+            @reInit();
+            @complete = false
 
-        if spend <= @duration # is blinking
-            @R = @fromR + (@toR - @fromR) * @easingMethod(spend / @duration)
-        else if @duration <= spend <= 2 * @duration # is disappearing
-            @R = @fromR + (@toR - @fromR) * @easingMethod( (2 * @duration - spend) / @duration)
-        else if spend > 2 * @duration # has animation end
-            return null
+        now = +new Date()
+        spend = now - @_start
+
+        if spend < 0 # hasn't start blink
+            return false;
+
+        if spend <= @_duration # is start blinking
+            @R = @_fromR + (@_toR - @_fromR) * (spend / @_duration)
+        else if @_duration <= spend <= 2 * @_duration # is disappearing
+            @R = @_fromR + (@_toR - @_fromR) * (2 * @_duration - spend) / @_duration
         else
-            console.log 'notmatch'
+            @complete = true
+            return false
 
         {
-            x: @x
-            y: @y
-            r: @r
-            g: @g
-            b: @b
+            x: @p.x
+            y: @p.y
             R: @R
         }
 
-class Easing
-    @Quadratic:
-        In: (k)->
-            k * k
-        Out: (k)->
-            k * ( 2 - k )
-        InOut: (k)->
-            if (k *= 2) < 1
-                0.5 * k * k
-            else
-                -0.5 * ( --k * ( k - 2 ) - 1 )
-
-    @Cubic:
-        In: (k)->
-            k * k * k
-        Out: (k)->
-            --k * k * k + 1
-        InOut: (k)->
-            if (k *= 2) < 1
-                0.5 * k * k * k
-            else
-                0.5 * ( ( k -= 2 ) * k * k + 2 )
-
-    @Quartic:
-        In: (k)->
-            k * k * k * k
-        Out: (k)->
-            1 - ( --k * k * k * k )
-        InOut: (k)->
-            if (k *= 2) < 1
-                0.5 * k * k * k * k
-            else
-                - 0.5 * ( ( k -= 2 ) * k * k * k - 2 )
-
-    @Bounce:
-        In: (k)->
-            1 - Easing.Bounce.Out(1 - k)
-        Out: (k)->
-            if k < ( 1 / 2.75 )
-                7.5625 * k * k;
-            else if k < ( 2 / 2.75 )
-                7.5625 * ( k -= ( 1.5 / 2.75 ) ) * k + 0.75
-            else if k < ( 2.5 / 2.75 )
-                7.5625 * ( k -= ( 2.25 / 2.75 ) ) * k + 0.9375
-            else
-                7.5625 * ( k -= ( 2.625 / 2.75 ) ) * k + 0.984375
-        InOut: (k)->
-            if k < 0.5
-                Easing.Bounce.In(k * 2) * 0.5
-            else
-                Easing.Bounce.Out(k * 2 - 1) * 0.5 + 0.5
+    updatePos: (mapObj)->
+        @p = mapObj.lnglatTocontainer @_lnglat
 
 window.Pixel = Pixel

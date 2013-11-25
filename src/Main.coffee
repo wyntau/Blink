@@ -1,81 +1,76 @@
-WIDTH = window.innerWidth
+class Map
+    constructor:()->
+        @mapObj = new AMap.Map 'amap', {
+            level: 6
+        }
 
-HEIGHT = window.innerHeight
+        canvasObj = new AMap.Canvas()
 
-DEFAUTL_BACKGROUND = '#000'
+        @arr = []
 
-canvas = document.getElementById 'canvas'
-ctx = canvas.getContext '2d'
+        self = @
 
-ctx.canvas.width = WIDTH
-ctx.canvas.height = HEIGHT
+        AMap.event.addListener canvasObj, 'draw', (data)=>
+            if self.canvas
+                return;
 
-img = new Image()
-img.src = 'img/particle.png'
+            self.canvas = data.node;
 
-arr = []
+            self.socket = io.connect('http://localhost:3000');
 
-stats = new Stats()
-stats.domElement.style.position = 'absolute'
-stats.domElement.style.right = '30px'
-stats.domElement.style.top = '30px'
-stats.domElement.style.width = '90px'
-document.body.appendChild( stats.domElement )
+            self.socket.on 'init', (data)=>
+                for dot in data.dots
+                    self.arr.push(new Pixel(self.mapObj, {
+                        lng: dot[0],
+                        lat: dot[1],
+                        score: dot[2]
+                        }))
 
-addPixel = (pixels)->
-    for key, pixel of pixels
-        arr.push(
-            new Pixel
-                x: pixel[0]
-                y: pixel[1]
-                R: pixel[2]
-                delay: pixel[3]
-                duration: 3000
-        )
+            self.socket.on 'update', (data)=>
 
-socket = io.connect 'http://localhost:3000'
+                for dot, i in data.update
+                    self.arr[i].addLife dot
 
-socket.emit 'first connect',
-    width:WIDTH
-    height: HEIGHT
+            AMap.event.addListener self.mapObj, 'dragend', =>
+                for dot in self.arr
+                    dot.updatePos self.mapObj
 
-socket.on 'init', (pixels)->
-    addPixel pixels
-    Animation.start step, verify, complete
+            AMap.event.addListener self.mapObj, 'zoomend', =>
+                for dot in self.arr
+                    dot.updatePos self.mapObj
 
-socket.on 'refresh', (pixels)->
-    addPixel pixels
+            self.drawCanvas()
 
-step = ->
-    stats.begin()
-    states = []
-    drop = 0
+        canvasObj.setMap @mapObj
 
-    for pixel, i in arr[0..]
-        if (state = pixel.update()) is null
-            arr.splice i, 1
-            drop++
-        else if(state)
-            states.push state
+    drawCanvas: ->
+        img = new Image
 
-    ctx.fillStyle = DEFAUTL_BACKGROUND
-    ctx.fillRect 0, 0, canvas.width, canvas.height
+        img.onload = =>
+            @_img = img
+            _step = =>
+                # console.log 'step'
+                ctx = @canvas.getContext('2d')
+                ctx.clearRect 0,0, ctx.canvas.width, ctx.canvas.height
+                ctx.fillStyle = 'rgba(0,0,0,0.7)'
+                ctx.fillRect 0,0, ctx.canvas.width, ctx.canvas.height
+                pixels = []
+                for dot in @arr
+                    if (tmp = dot.update())
+                        pixels.push(tmp)
 
-    for state in states
-        {r,g,b,a,R,x,y} = state
-        # ctx.globalAlpha = a
-        ctx.drawImage img, x - R, y - R, 2 * R, 2 * R
-        # ctx.fillStyle = "rgba(#{r},#{g},#{b},#{a})"
-        # ctx.beginPath()
-        # ctx.arc(x, y, R, 0, Math.PI * 2)
-        # ctx.fill()
+                for pixel in pixels
+                    {x,y,R} = pixel
+                    ctx.drawImage @_img, x - R, y - R, 2 * R, 2 * R
 
-    states = []
-    stats.end()
+            _verify = =>
+                true
 
-verify = ->
-    arr.length
+            _complete = =>
+                console.log 'complete'
 
-complete = ->
-    console.log 'complete'
+            Animation.start _step, _verify, _complete
 
+        img.src = '/img/particle.png'
+
+new Map
