@@ -6,32 +6,25 @@ class Pixel
     @MAX_SCORE    = 8000
     constructor: (mapObj, opts)->
 
-        @_lnglat = new AMap.LngLat(opts.lng, opts.lat)
-
-        @p = mapObj.lnglatTocontainer @_lnglat
-
-        @_score = Math.max(Pixel.MIN_SCORE, Math.min(opts.score, Pixel.MAX_SCORE))
-
-        @_fromR = Pixel.MIN_RADIUS
-
-        @_toR = @_score / Pixel.MAX_SCORE * Pixel.MAX_RADIUS
-
-        @R = @_fromR
-
+        @_lnglat   = new AMap.LngLat(opts.lng, opts.lat)
+        @p         = mapObj.lnglatTocontainer @_lnglat
+        @_score    = Math.max(Pixel.MIN_SCORE, Math.min(opts.score, Pixel.MAX_SCORE))
+        @_fromR    = Pixel.MIN_RADIUS
+        @_toR      = @_score / Pixel.MAX_SCORE * Pixel.MAX_RADIUS
+        @R         = @_fromR
         @_duration = @_score / Pixel.MAX_SCORE * Pixel.MAX_DURATION
-
-        @_start = +new Date() + Math.random() * Pixel.MAX_DURATION * 2
+        @_start    = +new Date() + Math.random() * Pixel.MAX_DURATION * 2
 
     reInit: ->
         if not @_next or @_next.length <= 0
             return false;
         else
-            newScore = @_score + @_next.pop()
-            @_score = Math.max(Pixel.MIN_SCORE, Math.min(newScore, Pixel.MAX_SCORE))
-            @_toR = @_score / Pixel.MAX_SCORE * Pixel.MAX_RADIUS
-            @R = @_fromR
+            newScore   = @_score + @_next.pop()
+            @_score    = Math.max(Pixel.MIN_SCORE, Math.min(newScore, Pixel.MAX_SCORE))
+            @_toR      = @_score / Pixel.MAX_SCORE * Pixel.MAX_RADIUS
+            @R         = @_fromR
             @_duration = @_score / Pixel.MAX_SCORE * Pixel.MAX_DURATION
-            @_start = +new Date() + Math.random() * Pixel.MAX_DURATION * 2
+            @_start    = +new Date() + Math.random() * Pixel.MAX_DURATION * 2
 
     addLife: (newScore)->
         if not @_next
