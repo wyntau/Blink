@@ -8,20 +8,42 @@
             margin: 0;
             padding: 0;
         }
+        html,body{
+            width: 100%;
+            height: 100%;
+        }
         #amap{
             display:block;
             border: 1px solid #ccc;
             margin: 0 auto;
-            width:1200px;
-            height: 800px;
+            width:100%;
+            height: 100%;
         }
     </style>
 </head>
 <body>
     <div id="amap"></div>
-    <script src="/socket.io/socket.io.js"></script>
     <script src="http://webapi.amap.com/maps?v=1.2&key=develop_example"></script>
-    <script src="dist/Blink.js"></script>
-    <script src="dist/main.js"></script>
+    <script src="/js/AMap.Blink.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <!--script src="http://localhost/release/maps?v=1.2&key=develop_example"></script-->
+    <script>
+    var mapObj = new AMap.Map('amap',{
+        level:5,
+        zooms: [5,5],
+        center: new AMap.LngLat(106.2667, 38.4667)
+    })
+
+    var blink = new AMap.Blink({
+            source: '/',
+            map:mapObj
+        })
+    // mapObj.plugin(['AMap.Blink'],function(){
+    //     var blink = new AMap.Blink({
+    //         source: 'http://localhost:3000',
+    //         map:mapObj
+    //     })
+    // })
+    </script>
 </body>
 </html>
