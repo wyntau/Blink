@@ -118,7 +118,7 @@
                 self._img = img;
                 Animation.start(_step, _verify, _complete);
             };
-            img.src = 'http://localhost:3000/img/particle.png';
+            img.src = '/img/particle.png';
 
             var _step = function(){
                 var ctx = self._canvas.getContext('2d');
