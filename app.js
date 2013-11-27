@@ -24,6 +24,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 var server = http.createServer(app);
 var io = socket.listen(server);
 
+io.set('log level', 1);
 server.listen(app.get('port'));
 
 var arr = [];

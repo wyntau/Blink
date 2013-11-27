@@ -1,0 +1,34 @@
+#! /bin/sh
+
+NODE_ENV=production
+DAEMON="node app.js"
+NAME=BlinkDemo
+DESC=BlinkDemo
+PIDFILE="blink.pid"
+
+case "$1" in
+  restart)
+        echo "ReStarting $NAME: "
+        pid=`cat $PIDFILE`
+        kill $pid
+        rm $PIDFILE
+        nohup $DAEMON > /dev/null &
+        echo $! > $PIDFILE
+        echo "DESC:$DESC."
+        ;;
+  start)
+        echo "Starting $DESC: "
+        nohup $DAEMON > /dev/null &
+        echo $! > $PIDFILE
+        echo "$NAME."
+        ;;
+  stop)
+        echo "Stopping $DESC: "
+        pid=`cat $PIDFILE`
+        kill $pid
+        rm $PIDFILE
+        echo "$NAME."
+        ;;
+    esac
+
+    exit 0
